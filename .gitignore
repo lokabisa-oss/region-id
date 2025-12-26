@@ -1,0 +1,10 @@
+# raw geospatial data
+data/osm/*.pbf
+
+# build artifacts
+node_modules
+dist
+.env
+
+# OS
+.DS_Store
