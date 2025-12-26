@@ -304,6 +304,14 @@ def validate_villages(villages, districts):
                 f"[village.csv] Row {idx}: island_count is not allowed at village level"
             )
 
+def validate_postal_codes(*args, **kwargs):
+    """
+    TODO:
+    Postal code validation is not implemented yet.
+    This will be enabled once authoritative postal code data is available.
+    """
+    raise NotImplementedError("Postal code validation not implemented")
+
 def main():
     try:
         provinces = load_csv("data/kemendagri/province.csv")
