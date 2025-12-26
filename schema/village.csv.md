@@ -6,14 +6,12 @@ data/kemendagri/village.csv
 
 ## Columns
 
-```text
-| Column        | Type   | Required | Description              |
-| ------------- | ------ | -------- | ------------------------ | --------- |
-| code          | string | yes      | Village code (10 digits) |
-| name          | string | yes      | Official village name    |
-| district_code | string | yes      | Parent district code     |
-| type          | string | yes      | desa                     | kelurahan |
-```
+| Column        | Type   | Required | Description              |     |
+| ------------- | ------ | -------- | ------------------------ | --- |
+| code          | string | yes      | Village code (10 digits) |     |
+| name          | string | yes      | Official village name    |     |
+| district_code | string | yes      | Parent district code     |     |
+| type          | string | yes      | desa / kelurahan         |     |
 
 ## Rules
 

@@ -6,13 +6,11 @@ data/kemendagri/district.csv
 
 ## Columns
 
-```text
-| Column       | Type   | Required | Description                |
-|------------- | ------ | -------- | -------------------------- |
-| code         | string | yes      | District code (6 digits)   |
-| name         | string | yes      | Official district name     |
-| regency_code | string | yes      | Parent regency/city code   |
-```
+| Column       | Type   | Required | Description              |
+| ------------ | ------ | -------- | ------------------------ |
+| code         | string | yes      | District code (6 digits) |
+| name         | string | yes      | Official district name   |
+| regency_code | string | yes      | Parent regency/city code |
 
 ## Rules
 
