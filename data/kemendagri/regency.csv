@@ -1,0 +1,24 @@
+code,name,province_code,type,capital,area_km2,district_count,urban_village_count,rural_village_count,village_count
+1101,Kabupaten Aceh Selatan,11,regency,,239629,260.0,0,4174,4174
+1102,Kabupaten Aceh Tenggara,11,regency,,4,4179.123,0,235589,235589
+1103,Kabupaten Aceh Timur,11,regency,,9,5409.158,0,461391,461391
+1104,Kabupaten Aceh Tengah,11,regency,,8,4468.417,0,232606,232606
+1105,Kabupaten Aceh Barat,11,regency,,11,2782.606,0,209220,209220
+1106,Kabupaten Aceh Besar,11,regency,,6,2891.227,0,442987,442987
+1107,Kabupaten Pidie,11,regency,,7,3177.063,0,451076,451076
+1108,Kabupaten Aceh Utara,11,regency,,10,2705.045,0,641007,641007
+1109,Kabupaten Simeulue,11,regency,,48,8.0,0,2000,2000
+1110,Kabupaten Aceh Singkil,11,regency,,14,1851.615,0,140461,140461
+1111,Kabupaten Bireuen,11,regency,,48,8.0,0,2000,2000
+1112,Kabupaten Aceh Barat Daya,11,regency,,4,1882.054,0,156128,156128
+1113,Kabupaten Gayo Lues,11,regency,,4,5541.285,0,107506,107506
+1114,Kabupaten Aceh Jaya,11,regency,,4,3870.566,0,101407,101407
+1115,Kabupaten Nagan Raya,11,regency,,4,3523.283,0,181103,181103
+1116,Kabupaten Aceh Tamiang,11,regency,,4,2187.817,0,312061,312061
+1117,Kabupaten Bener Meriah,11,regency,,41,1907.399,0,181376,181376
+1118,Kabupaten Pidie Jaya,11,regency,,7,938.868,0,166517,166517
+1171,Kota Banda Aceh,11,city,,5,56.835,0,265310,265310
+1172,Kota Sabang,11,city,,10,121.867,0,42793,42793
+1173,Kota Lhokseumawe,11,city,,2,132.966,0,198705,198705
+1174,Kota Langsa,11,city,,3,224.203,0,183914,183914
+1175,Kota Subulussalam,11,city,,8,1183.601,0,107185,107185
