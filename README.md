@@ -1,63 +1,140 @@
-# id-wilayah-indonesia 🇮🇩
+# region-id
 
-Reference datasets and reproducible pipelines
-for Indonesian administrative divisions and their geospatial representations.
+Open reference dataset and geospatial boundaries for Indonesian administrative regions.
 
-## Scope
+This project provides structured, authoritative, and extensible data for Indonesian regions — from province to village — designed for developers, researchers, civic tech, and public-interest projects.
 
-This repository provides:
+---
 
-- Official administrative division datasets (codes & hierarchy)
-- Geospatial boundary datasets (GeoJSON)
-- Reproducible data pipelines
-- Optional read-only API outputs
+## ✨ Features
 
-## Administrative Levels
+- Complete Indonesian administrative hierarchy:
+  - Province
+  - Regency / City
+  - District
+  - Village
+- Official administrative boundaries (GeoJSON)
+- Normalized datasets in **JSON and CSV**
+- Postal codes (Kode Pos)
+- Vehicle license plate region codes (Kode Plat Nomor)
+- Clear data sources and attribution
+- Designed for long-term maintenance and extension
 
-- Country
-- Province
-- Regency / City
-- District
-- Village / Kelurahan
+---
 
-## Data Sources
+## 📂 Repository Structure
 
-### Administrative Data
+```text
+region-id/
+├─ data/
+│  ├─ json/
+│  └─ csv/
+├─ geojson/
+│   └─ big/
+├─ schema/
+├─ pipeline/
+├─ metadata/
+├─ examples/
+├─ README.md
+├─ LICENSE
+```
 
-- Ministry of Home Affairs (Kemendagri) — primary authority
-- Statistics Indonesia (BPS) — secondary reference and cross-checking
+---
 
-### Geospatial Data
+## 📊 Data Coverage
 
-- OpenStreetMap contributors (geometry)
-- Extracted via Geofabrik (ODbL 1.0)
+| Dataset                | Status   |
+| ---------------------- | -------- |
+| Province               | ✅       |
+| Regency / City         | ✅       |
+| District               | ✅       |
+| Village                | ✅       |
+| Geospatial Boundary    | ✅ (BIG) |
+| Postal Code (Kode Pos) | ✅       |
+| Vehicle Plate Code     | ✅       |
 
-### Supplementary Data
+---
 
-- PT Pos Indonesia — postal code reference data
+## 📚 Data Sources
 
-## Repository Structure
+This project is built from official and verifiable public references.
 
-- `data/kemendagri` — administrative datasets (source of truth)
-- `data/postal` — postal code reference data
-- `geojson` — geospatial boundary outputs
-- `pipeline` — reproducible administrative and geospatial pipelines
-- `public/api` — static API outputs (e.g. GitHub Pages)
-- `api` — optional runtime API (e.g. Cloudflare Workers)
+### Administrative Boundaries
 
-## Design Principles
+Badan Informasi Geospasial (BIG)
+Official source for Indonesian administrative boundary geometries
+(province to village level).
 
-- Clear separation between administrative and geospatial data
-- Reproducible and source-traceable pipelines
-- Canonical administrative codes without separators
-- Dataset-first, API as a derived layer
-- Administrative data is authoritative for identity and hierarchy;
-  geospatial data is authoritative for geometry only
+### Administrative Codes & References
 
-## License
+Ministry of Home Affairs (Kemendagri)
 
-- Code & pipelines: MIT
-- Geospatial data: ODbL (derived from OpenStreetMap)
+Statistics Indonesia (BPS)
 
-> “This license applies to code, schemas, and pipeline scripts only.
-> Data is subject to its respective source licenses.”
+### Postal Codes
+
+- Pos Indonesia
+
+  Postal code reference data obtained from https://kodepos.posindonesia.co.id/
+
+### Vehicle License Plate Codes
+
+Publicly documented regional vehicle plate code references
+aligned with Indonesian administrative regions.
+
+Detailed dataset references, versions, and notes are documented in the `metadata/` directory.
+
+---
+
+## 🧩 Extensibility
+
+The project is intentionally named region-id to support future dataset extensions such as:
+
+- Additional postal and logistics identifiers
+- Transportation and regional mobility codes
+- Statistical and demographic indicators
+- Additional geospatial layers
+
+---
+
+## 📜 License
+
+### Code
+
+MIT License
+
+### Data & Content
+
+- Administrative boundary geometries are derived from public datasets published by **Badan Informasi Geospasial (BIG)**.
+- Postal code data is referenced from Pos Indonesia public information.
+- Vehicle plate code mappings are derived from publicly available regional references.
+
+Usage of data is subject to the terms, attribution, and redistribution rules defined by the original data providers.
+
+Refer to the `metadata/` directory for dataset-specific notes.
+
+## 🤝 Contributing
+
+Contributions are welcome.
+
+You can help by:
+
+- Improving data accuracy
+- Adding or verifying references
+- Enhancing schemas or validation
+- Improving data processing pipelines or documentation
+
+Contribution guidelines will be added in CONTRIBUTING.md.
+
+## 🏷️ Project Status
+
+- Status: Active
+- Type: Open Source Dataset
+- Scope: Indonesian regional reference data
+- Maintained by: Lokabisa OSS
+
+## 🌐 About Lokabisa OSS
+
+Lokabisa OSS is an open-source initiative focused on public reference datasets, regional infrastructure, and developer tools for communities and local ecosystems in Indonesia.
+
+Website: https://oss.lokabisa.id
