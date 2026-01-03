@@ -2,14 +2,15 @@
 
 ## File
 
-data/kemendagri/province.csv
+datasetsprovince.csv
 
 ## Columns
 
-| Column | Type   | Required | Description                       |
-| ------ | ------ | -------- | --------------------------------- |
-| code   | string | yes      | Province code (2 digits, numeric) |
-| name   | string | yes      | Official province name            |
+| Column  | Type   | Required | Description                       |
+| ------- | ------ | -------- | --------------------------------- |
+| code    | string | yes      | Province code (2 digits, numeric) |
+| name    | string | yes      | Official province name            |
+| capital | string | no       | Administrative capital            |
 
 ## Rules
 

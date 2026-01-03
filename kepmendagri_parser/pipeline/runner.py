@@ -1,5 +1,6 @@
 import pdfplumber
 from pathlib import Path
+from typing import Callable
 
 from kepmendagri_parser.pipeline.state import ParsingState
 from kepmendagri_parser.pipeline.context import PageType
@@ -12,16 +13,37 @@ from kepmendagri_parser.parsers.regency_parser import extract_regencies_from_tab
 from kepmendagri_parser.parsers.district_parser import extract_districts_from_table
 from kepmendagri_parser.parsers.village_parser import extract_villages_from_table
 
-from kepmendagri_parser.sinks.province_csv import save_province_rows
-from kepmendagri_parser.sinks.regency_csv import save_regency_rows
-from kepmendagri_parser.sinks.district_csv import save_district_rows
-from kepmendagri_parser.sinks.village_csv import save_village_rows
+from kepmendagri_parser.builders.dataset_builder import build_dataset
+
+from kepmendagri_parser.utils.raw_cache import dump_raw, load_raw,  cleanup_tmp
 
 
 def dbg(level: int, current: int, msg: str):
     if current >= level:
         print(msg)
 
+def report_and_validate_counts(
+    province_rows, regency_rows, district_rows, village_rows, debug_level
+):
+    dbg(1, debug_level, "📊 Raw parsing summary:")
+    dbg(1, debug_level, f"  Provinces : {len(province_rows)}")
+    dbg(1, debug_level, f"  Regencies : {len(regency_rows)}")
+    dbg(1, debug_level, f"  Districts : {len(district_rows)}")
+    dbg(1, debug_level, f"  Villages  : {len(village_rows)}")
+    dbg(1, debug_level, "-" * 60)
+
+    # sanity checks (optional tapi sangat disarankan)
+    if len(province_rows) < 30:
+        raise ValueError("❌ Province count too low — parsing likely failed")
+
+    if len(regency_rows) < 500:
+        raise ValueError("❌ Regency count too low — possible skipped pages")
+
+    if len(district_rows) == 0:
+        raise ValueError("❌ No districts parsed at all")
+
+    if len(village_rows) == 0:
+        raise ValueError("❌ No villages parsed at all")
 
 def run_pipeline(
     pdf_path: Path,
@@ -29,96 +51,150 @@ def run_pipeline(
     start_page: int = 1,
     end_page: int | None = None,
     debug_level: int = 0,
+    on_progress: Callable[[int, int], None] | None = None,
+    reuse_raw: bool = False,
 ):
     dbg(1, debug_level, "🚀 Starting Kepmendagri Parser Pipeline")
     dbg(1, debug_level, f"📄 Source PDF : {pdf_path}")
     dbg(1, debug_level, f"📂 Output dir : {out_dir}")
     dbg(1, debug_level, "-" * 60)
 
-    state = ParsingState()
+    tmp_dir = out_dir.parent / ".tmp"
 
-    seen_province = False
-    unknown_after_province = 0
+    # ===============================
+    # LOAD RAW (FAST PATH)
+    # ===============================
+    if reuse_raw and (tmp_dir / "province.raw.json").exists():
+        dbg(1, debug_level, "♻️ Reusing cached raw data")
+        province_rows = load_raw(tmp_dir / "province.raw.json")
+        regency_rows  = load_raw(tmp_dir / "regency.raw.json")
+        district_rows = load_raw(tmp_dir / "district.raw.json")
+        village_rows  = load_raw(tmp_dir / "village.raw.json")
 
-    province_rows = []
-    regency_rows = []
-    district_rows = []
-    village_rows = []
+    # ===============================
+    # PARSE PDF (SLOW PATH)
+    # ===============================
+    else:
+        state = ParsingState()
 
-    with pdfplumber.open(pdf_path) as pdf:
-        total_pages = len(pdf.pages)
-        end_page = min(end_page or total_pages, total_pages)
+        seen_province = False
 
-        for page_number in range(start_page, end_page + 1):
-            dbg(1, debug_level, f"\n📄 Page {page_number}/{total_pages}")
+        province_rows = []
+        regency_rows = []
+        district_rows = []
+        village_rows = []
 
-            page = pdf.pages[page_number - 1]
-            page_type = classify_page(page)
+        district_context = {
+            "province_code": None,
+            "regency_code": None,
+            "province_capital": None,
+            "regency_capital": None,
+        }
 
-            dbg(1, debug_level, f"   🔎 Classified as: {page_type.name}")
+        village_context = {"district_code": None}
 
-            # --- province tracking ---
-            if page_type == PageType.PROVINSI and not seen_province:
-                seen_province = True
-                unknown_after_province = 0
-                dbg(1, debug_level, "   🏳️ First PROVINSI page detected")
+        with pdfplumber.open(pdf_path) as pdf:
+            total_pages = len(pdf.pages)
+            end_page = min(end_page or total_pages, total_pages)
 
-            if seen_province:
-                if page_type == PageType.UNKNOWN:
-                    unknown_after_province += 1
-                    dbg(1, debug_level, f"   ⚠️ UNKNOWN after PROVINSI ({unknown_after_province})")
-                else:
-                    unknown_after_province = 0
+            total_to_process = end_page - start_page + 1
+            processed = 0
 
-                if unknown_after_province >= 1:
-                    dbg(1, debug_level, "   ⛔ Stop condition reached (UNKNOWN after PROVINSI)")
+            for page_number in range(start_page, end_page + 1):
+                processed += 1
+
+                if on_progress:
+                    on_progress(processed, total_to_process)
+
+                page = pdf.pages[page_number - 1]
+                page_type = classify_page(page)
+
+                if seen_province and page_type == PageType.UNKNOWN:
+                    if on_progress:
+                        # force progress to 100%
+                        on_progress(total_to_process, total_to_process)
                     break
 
-            # fallback ke last_page_type
-            if page_type == PageType.UNKNOWN and state.last_page_type:
-                dbg(2, debug_level, f"   ↩️ Fallback to last page type: {state.last_page_type.name}")
-                page_type = state.last_page_type
+                if page_type == PageType.PROVINSI:
+                    seen_province = True
+                    rows = extract_provinces_from_table(
+                        extract_page_table(page), page_number
+                    )
+                    province_rows.extend(rows)
 
-            tables = extract_page_table(page)
-            dbg(2, debug_level, f"   📊 Tables detected: {len(tables)}")
+                elif page_type == PageType.KAB_KOTA:
+                    rows = extract_regencies_from_table(
+                        extract_page_table(page), page_number
+                    )
+                    regency_rows.extend(rows)
 
-            if debug_level >= 3 and tables:
-                dbg(3, debug_level, f"   🧾 Table[0] header preview: {tables[0][:5]}")
+                elif page_type == PageType.KECAMATAN:
+                    rows = extract_districts_from_table(
+                        extract_page_table(page),
+                        page_number,
+                        initial_context=district_context,
+                    )
+                    if rows:
+                        district_rows.extend(rows)
+                        last = rows[-1]
+                        district_context.update({
+                            "province_code": last.get("province_code"),
+                            "regency_code": last.get("regency_code"),
+                            "province_capital": last.get("province_capital"),
+                            "regency_capital": last.get("regency_capital"),
+                        })
 
-            # --- routing ---
-            if page_type == PageType.PROVINSI:
-                rows = extract_provinces_from_table(tables, page_number)
-                province_rows.extend(rows)
-                dbg(2, debug_level, f"   ✅ Provinces parsed: {len(rows)}")
+                elif page_type == PageType.KELURAHAN_DESA:
+                    rows = extract_villages_from_table(
+                        extract_page_table(page),
+                        page_number,
+                        initial_district_code=village_context["district_code"],
+                    )
+                    if rows:
+                        village_rows.extend(rows)
+                        village_context["district_code"] = rows[-1]["district_code"]
 
-            elif page_type == PageType.KAB_KOTA:
-                rows = extract_regencies_from_table(tables, page_number)
-                regency_rows.extend(rows)
-                dbg(2, debug_level, f"   ✅ Regencies parsed: {len(rows)}")
+                state.last_page_type = page_type
 
-            elif page_type == PageType.KECAMATAN:
-                rows = extract_districts_from_table(tables, page_number)
-                district_rows.extend(rows)
-                dbg(2, debug_level, f"   ✅ Districts parsed: {len(rows)}")
+        # === dump raw parsed data (implicit cache) ===
+        dump_raw(province_rows, tmp_dir / "province.raw.json")
+        dump_raw(regency_rows,  tmp_dir / "regency.raw.json")
+        dump_raw(district_rows, tmp_dir / "district.raw.json")
+        dump_raw(village_rows,  tmp_dir / "village.raw.json")
+    
+    # ===============================
+    # RAW DATA REPORT
+    # ===============================
+    report_and_validate_counts(
+        province_rows,
+        regency_rows,
+        district_rows,
+        village_rows,
+        debug_level,
+    )
 
-            elif page_type == PageType.KELURAHAN_DESA:
-                rows = extract_villages_from_table(tables, page_number)
-                village_rows.extend(rows)
-                dbg(2, debug_level, f"   ✅ Villages parsed: {len(rows)}")
+    # ===============================
+    # BUILD FINAL DATASET (ALWAYS)
+    # ===============================
+    dbg(1, debug_level, "🛠️ Building final datasets…")
 
-            state.last_page_type = page_type
+    try:
+        build_dataset(
+            province_rows,
+            regency_rows,
+            district_rows,
+            village_rows,
+            out_dir,
+        )
 
-    dbg(1, debug_level, "\n" + "=" * 60)
-    dbg(1, debug_level, "📝 Writing CSV outputs...")
-    dbg(1, debug_level, f"   Provinces : {len(province_rows)}")
-    dbg(1, debug_level, f"   Regencies : {len(regency_rows)}")
-    dbg(1, debug_level, f"   Districts : {len(district_rows)}")
-    dbg(1, debug_level, f"   Villages  : {len(village_rows)}")
+    except Exception as e:
+        dbg(1, debug_level, "❌ Dataset build failed")
+        dbg(1, debug_level, f"Raw cache preserved at: {tmp_dir}")
+        raise
 
-    save_province_rows(province_rows, out_dir)
-    save_regency_rows(regency_rows, out_dir)
-    save_district_rows(district_rows, out_dir)
-    save_village_rows(village_rows, out_dir)
+    # else:
+        # cleanup_tmp(tmp_dir)
+        # dbg(1, debug_level, "🧹 Temporary raw cache cleaned up")
 
     dbg(1, debug_level, "✅ Pipeline finished successfully")
 

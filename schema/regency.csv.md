@@ -2,7 +2,7 @@
 
 ## File
 
-data/kemendagri/regency.csv
+datasets/regency.csv
 
 ## Columns
 

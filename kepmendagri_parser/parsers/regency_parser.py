@@ -6,12 +6,23 @@ def split_cell(cell):
     return [x.strip() for x in str(cell).split("\n") if x.strip()]
 
 REGENCY_CODE_RE = re.compile(r"^\d{2}\.\d{2}$")
+CODE_HINT_RE = re.compile(r"\d{2}[.\n]?\d{2}")
 
 def extract_regencies_from_table(table, page_num):
     rows = []
 
     # baris data utama biasanya index ke-2 (setelah header)
-    data_row = next((r for r in table if r and r[1] and "\n" in str(r[1])), None)
+    data_row = next(
+        (
+            r for r in table
+            if r
+            and len(r) > 2
+            and r[1]
+            and CODE_HINT_RE.search(str(r[1]))
+        ),
+        None
+    )
+
     if not data_row:
         return rows
 

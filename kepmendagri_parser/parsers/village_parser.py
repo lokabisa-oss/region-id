@@ -1,29 +1,34 @@
 import re
 
-VILLAGE_CODE_RE = re.compile(r"\d{2}\.\d{2}\.\d{2}\.\d{4}")
-DISTRICT_CODE_RE = re.compile(r"\d{2}\.\d{2}\.\d{2}")
+VILLAGE_CODE_RE = re.compile(r"^\d{2}\.\d{2}\.\d{2}\.\d{4}$")
+DISTRICT_CODE_RE = re.compile(r"^\d{2}\.\d{2}\.\d{2}$")
 
 
-def extract_villages_from_table(table, page):
+def extract_villages_from_table(table, page, initial_district_code=None):
     rows = []
-    current_district_code = None
 
-    for r in table[1:]:  # skip header
-        if not r or len(r) < 7:
+    current_district_code = initial_district_code
+
+    for r in table:
+        if not r or len(r) < 4:
             continue
 
         kode = str(r[0]).strip() if r[0] else ""
-        kelurahan = str(r[5]).strip() if len(r) > 5 and r[5] else ""
-        desa = str(r[6]).strip() if len(r) > 6 and r[6] else ""
+        kelurahan = str(r[5]).strip() if len(r) >= 2 and r[5] else ""
+        desa = str(r[6]).strip() if len(r) >= 1 and r[6] else ""
 
-        # --- detect kecamatan header ---
         if DISTRICT_CODE_RE.fullmatch(kode) and not VILLAGE_CODE_RE.fullmatch(kode):
             current_district_code = kode.replace(".", "")
             continue
 
-        # --- detect desa / kelurahan ---
         if VILLAGE_CODE_RE.fullmatch(kode) and current_district_code:
-            if kelurahan:
+            name = None
+            vtype = None
+
+            if kelurahan and desa:
+                name = f"{kelurahan} {desa}".strip()
+                vtype = "desa"
+            elif kelurahan:
                 name = kelurahan
                 vtype = "kelurahan"
             elif desa:
@@ -32,7 +37,6 @@ def extract_villages_from_table(table, page):
             else:
                 continue
 
-            # buang numbering "1 Nama"
             name = re.sub(r"^\d+\s*", "", name)
 
             rows.append({
