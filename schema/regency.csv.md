@@ -6,18 +6,13 @@ data/kemendagri/regency.csv
 
 ## Columns
 
-| Column              | Type    | Required | Description                              |
-| ------------------- | ------- | -------- | ---------------------------------------- |
-| code                | string  | yes      | Regency / City code (4 digits, numeric)  |
-| name                | string  | yes      | Official regency / city name             |
-| province_code       | string  | yes      | Parent province code (2 digits)          |
-| type                | string  | yes      | Administrative type: `regency` or `city` |
-| capital             | string  | no       | Administrative capital                   |
-| area_km2            | number  | no       | Official total area (km²)                |
-| district_count      | integer | no       | Number of districts (kecamatan)          |
-| urban_village_count | integer | no       | Number of kelurahan                      |
-| rural_village_count | integer | no       | Number of desa                           |
-| village_count       | integer | no       | Total villages (kelurahan + desa)        |
+| Column        | Type   | Required | Description                              |
+| ------------- | ------ | -------- | ---------------------------------------- |
+| code          | string | yes      | Regency / City code (4 digits, numeric)  |
+| name          | string | yes      | Official regency / city name             |
+| province_code | string | yes      | Parent province code (2 digits)          |
+| type          | string | yes      | Administrative type: `regency` or `city` |
+| capital       | string | no       | Administrative capital                   |
 
 ### Identity & Hierarchy
 
