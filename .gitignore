@@ -3,11 +3,17 @@ __pycache__/
 *.pyc
 .venv/
 
-# Local data & artifacts
+# Generated datasets & artifacts (never commit)
+datasets/
 data/
 out/
-*.csv
+
+# Temporary / cache
+.tmp/
+
+# Large source documents
 *.pdf
+*.zip
 
 # OS
 .DS_Store
