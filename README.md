@@ -4,16 +4,16 @@
 
 <p align="center">
   <a href="https://github.com/lokabisa-oss/region-id/releases">
-    <img src="https://img.shields.io/github/v/release/lokabisa/region-id?style=flat-square" alt="Latest Release">
+    <img src="https://img.shields.io/github/v/release/lokabisa-oss/region-id?style=flat-square" alt="Latest Release">
   </a>
   <a href="https://github.com/lokabisa-oss/region-id">
-    <img src="https://img.shields.io/github/repo-size/lokabisa/region-id?style=flat-square" alt="Repo Size">
+    <img src="https://img.shields.io/github/repo-size/lokabisa-oss/region-id?style=flat-square" alt="Repo Size">
   </a>
   <a href="https://github.com/lokabisa-oss/region-id/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/lokabisa/region-id?style=flat-square" alt="License">
+    <img src="https://img.shields.io/github/license/lokabisa-oss/region-id?style=flat-square" alt="License">
   </a>
   <a href="https://github.com/lokabisa-oss/region-id/commits/main">
-    <img src="https://img.shields.io/github/last-commit/lokabisa/region-id?style=flat-square" alt="Last Commit">
+    <img src="https://img.shields.io/github/last-commit/lokabisa-oss/region-id?style=flat-square" alt="Last Commit">
   </a>
 </p>
 
@@ -104,16 +104,6 @@ If validation fails, the dataset is **not released**.
 
 ---
 
-## Data Sources
-
-The datasets are derived from official and publicly verifiable references, including:
-
-- Ministry of Home Affairs (Kemendagri)
-
-Source details, legal notes, and special-region metadata are documented in the `metadata/` directory.
-
----
-
 ## Repository Purpose
 
 This repository serves as:
@@ -190,6 +180,8 @@ The generated datasets will be written to:
 ```
 
 Generated outputs should match the corresponding GitHub Release for the same version.
+
+Reproducibility is a first-class goal of this project.
 
 ---
 
