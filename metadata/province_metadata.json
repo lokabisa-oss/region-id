@@ -1,56 +1,25 @@
 {
-  "11": {
-    "is_special_region": true,
-    "special_type": "special_autonomy",
-    "special_region_reason": "Pengakuan kekhususan Aceh dalam penerapan syariat Islam dan penyelesaian konflik melalui otonomi khusus",
-    "legal_basis": "UU No. 11 Tahun 2006"
-  },
-  "31": {
-    "is_special_region": true,
-    "special_type": "special_capital",
-    "special_region_reason": "Sebagai ibu kota negara dan pusat pemerintahan nasional",
-    "legal_basis": "UU No. 29 Tahun 2007"
-  },
-  "34": {
-    "is_special_region": true,
-    "special_type": "privileged",
-    "special_region_reason": "Pengakuan atas peran historis Kasultanan Yogyakarta dalam pembentukan dan mempertahankan NKRI",
-    "legal_basis": "UU No. 13 Tahun 2012"
-  },
-  "91": {
-    "is_special_region": true,
-    "special_type": "special_autonomy",
-    "special_region_reason": "Perlindungan hak masyarakat adat dan percepatan pembangunan melalui otonomi khusus Papua",
-    "legal_basis": "UU No. 21 Tahun 2001"
-  },
-  "92": {
-    "is_special_region": true,
-    "special_type": "special_autonomy",
-    "special_region_reason": "Perluasan kebijakan otonomi khusus Papua untuk pemerataan pembangunan",
-    "legal_basis": "UU No. 35 Tahun 2008"
-  },
-  "93": {
-    "is_special_region": true,
-    "special_type": "special_autonomy_derived",
-    "special_region_reason": "Provinsi hasil pemekaran wilayah Papua yang tetap berada dalam kerangka otonomi khusus Papua",
-    "legal_basis": "UU No. 2 Tahun 2021"
-  },
-  "94": {
-    "is_special_region": true,
-    "special_type": "special_autonomy_derived",
-    "special_region_reason": "Provinsi hasil pemekaran wilayah Papua yang tetap berada dalam kerangka otonomi khusus Papua",
-    "legal_basis": "UU No. 2 Tahun 2021"
-  },
-  "95": {
-    "is_special_region": true,
-    "special_type": "special_autonomy_derived",
-    "special_region_reason": "Provinsi hasil pemekaran wilayah Papua yang tetap berada dalam kerangka otonomi khusus Papua",
-    "legal_basis": "UU No. 2 Tahun 2021"
-  },
-  "96": {
-    "is_special_region": true,
-    "special_type": "special_autonomy_derived",
-    "special_region_reason": "Provinsi hasil pemekaran wilayah Papua yang tetap berada dalam kerangka otonomi khusus Papua",
-    "legal_basis": "UU No. 2 Tahun 2021"
+  "version": "1.0",
+  "source": "Kepmendagri RI",
+  "last_updated": "2025-01-04",
+  "provinces": {
+    "31": {
+      "name": "Daerah Khusus Ibukota Jakarta",
+      "is_special_region": true,
+      "special_region_reason": "capital_city",
+      "notes": "Does not have autonomous regencies"
+    },
+    "34": {
+      "name": "Daerah Istimewa Yogyakarta",
+      "is_special_region": true,
+      "special_region_reason": "historical_monarchy",
+      "notes": "Special governance under Sultanate"
+    },
+    "91": {
+      "name": "Papua",
+      "is_special_region": true,
+      "special_region_reason": "special_autonomy",
+      "notes": "Special autonomy under national law"
+    }
   }
 }
