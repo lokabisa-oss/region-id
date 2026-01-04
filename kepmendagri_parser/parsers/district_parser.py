@@ -4,10 +4,17 @@ PROVINCE_CODE_RE = re.compile(r"^\d{2}$")
 REGENCY_CODE_RE  = re.compile(r"^\d{2}\.\d{2}$")
 DISTRICT_CODE_RE = re.compile(r"^\d{2}\.\d{2}\.\d{2}$")
 
-def normalize_header_rows(table, max_rows=3):
-    """
-    Gabungkan beberapa baris awal tabel menjadi 1 header logis
-    """
+def clean_name(value: str | None) -> str | None:
+    if not value:
+        return None
+
+    value = re.sub(r"[\n\r\t]+", " ", value)
+
+    value = re.sub(r"\s{2,}", " ", value)
+
+    return value.strip()
+
+def normalize_header_rows(table, max_rows=2):
     headers = table[:max_rows]
 
     col_count = max(len(r) for r in headers)
@@ -27,7 +34,6 @@ def find_col_idx(headers, keyword):
     return None
 
 def extract_districts_from_table(table, page_num, initial_context=None):
-
     current_province_code = None
     current_regency_code = None
     current_province_capital = None
@@ -55,7 +61,7 @@ def extract_districts_from_table(table, page_num, initial_context=None):
 
         code = str(r[idx_code]).strip() if r[idx_code] else ""
         name = str(r[idx_name]).strip() if r[idx_name] else ""
-        capital = (
+        capital = clean_name(
             str(r[idx_cap]).strip()
             if idx_cap is not None and idx_cap < len(r) and r[idx_cap]
             else ""
@@ -69,6 +75,15 @@ def extract_districts_from_table(table, page_num, initial_context=None):
             current_province_code = code
             if capital:
                 current_province_capital = capital
+                rows.append({
+                    "code": code.replace(".", ""),
+                    "province_code": current_province_code,
+                    "regency_code": current_regency_code,
+                    "name": None,
+                    "province_capital": current_province_capital,
+                    "regency_capital": current_regency_capital,
+                    "source_page": page_num,
+                })
             continue
 
         # === KABUPATEN / KOTA ===
@@ -76,14 +91,19 @@ def extract_districts_from_table(table, page_num, initial_context=None):
             current_regency_code = code.replace(".", "")
             if capital:
                 current_regency_capital = capital
+                rows.append({
+                    "code": code.replace(".", ""),
+                    "province_code": current_province_code,
+                    "regency_code": current_regency_code,
+                    "name": None,
+                    "province_capital": current_province_capital,
+                    "regency_capital": current_regency_capital,
+                    "source_page": page_num,
+                })
             continue
 
         # === KECAMATAN ===
         if DISTRICT_CODE_RE.fullmatch(code):
-            # 🔒 guard: wajib sudah punya konteks
-            if not current_province_code or not current_regency_code:
-                continue
-
             rows.append({
                 "code": code.replace(".", ""),
                 "province_code": current_province_code,

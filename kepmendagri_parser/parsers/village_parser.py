@@ -1,5 +1,15 @@
 import re
 
+def clean_name(value: str | None) -> str | None:
+    if not value:
+        return None
+
+    value = re.sub(r"[\n\r\t]+", " ", value)
+    value = re.sub(r"\s{2,}", " ", value)
+
+    return value.strip()
+
+
 VILLAGE_CODE_RE = re.compile(r"^\d{2}\.\d{2}\.\d{2}\.\d{4}$")
 DISTRICT_CODE_RE = re.compile(r"^\d{2}\.\d{2}\.\d{2}$")
 
@@ -27,17 +37,19 @@ def extract_villages_from_table(table, page, initial_district_code=None):
 
             if kelurahan and desa:
                 name = f"{kelurahan} {desa}".strip()
-                vtype = "desa"
+                vtype = "village"
             elif kelurahan:
                 name = kelurahan
-                vtype = "kelurahan"
+                vtype = "urban_village"
             elif desa:
                 name = desa
-                vtype = "desa"
+                vtype = "village"
             else:
                 continue
 
-            name = re.sub(r"^\d+\s*", "", name)
+            name = clean_name(
+                re.sub(r"^\d+\s*", "", name)
+            )
 
             rows.append({
                 "code": kode.replace(".", ""),

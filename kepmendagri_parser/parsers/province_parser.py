@@ -34,7 +34,6 @@ def extract_provinces_from_table(table, page_num):
                     }
                 )
             except IndexError:
-                # defensive: skip incomplete rows
                 continue
 
     return rows

@@ -135,13 +135,18 @@ def run_pipeline(
                         initial_context=district_context,
                     )
                     if rows:
-                        district_rows.extend(rows)
                         last = rows[-1]
+                        last_provice_code =  last.get("province_code")
+                        last_regency_code = last.get("regency_code")
+                        last_province_capital = last.get("province_capital")
+                        last_regency_capital = last.get("regency_capital")
+
+                        district_rows.extend(r for r in rows if r.get("name") is not None)
                         district_context.update({
-                            "province_code": last.get("province_code"),
-                            "regency_code": last.get("regency_code"),
-                            "province_capital": last.get("province_capital"),
-                            "regency_capital": last.get("regency_capital"),
+                            "province_code": last_provice_code,
+                            "regency_code": last_regency_code,
+                            "province_capital": last_province_capital,
+                            "regency_capital": last_regency_capital,
                         })
 
                 elif page_type == PageType.KELURAHAN_DESA:
@@ -192,9 +197,9 @@ def run_pipeline(
         dbg(1, debug_level, f"Raw cache preserved at: {tmp_dir}")
         raise
 
-    # else:
-        # cleanup_tmp(tmp_dir)
-        # dbg(1, debug_level, "🧹 Temporary raw cache cleaned up")
+    else:
+        cleanup_tmp(tmp_dir)
+        dbg(1, debug_level, "🧹 Temporary raw cache cleaned up")
 
     dbg(1, debug_level, "✅ Pipeline finished successfully")
 
