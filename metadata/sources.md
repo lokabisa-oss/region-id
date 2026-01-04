@@ -11,3 +11,12 @@ Primary source:
 
 Administrative data is treated as the **canonical source of truth**
 for codes, names, and hierarchical relationships.
+
+### Spreadsheet Preview
+
+A public Google Spreadsheet is provided for quick inspection and review:
+
+https://docs.google.com/spreadsheets/d/1fWEIztD397_9uG4ZvAuv9IX43ek9gNvlRuykpwza9_I
+
+This spreadsheet mirrors the latest released dataset but is not intended
+for programmatic consumption.
