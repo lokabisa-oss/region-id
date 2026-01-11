@@ -29,6 +29,13 @@ def extract_villages_from_table(table, page, initial_district_code=None):
 
         if DISTRICT_CODE_RE.fullmatch(kode) and not VILLAGE_CODE_RE.fullmatch(kode):
             current_district_code = kode.replace(".", "")
+            rows.append({
+                "code": kode.replace(".", ""),
+                "name": None,
+                "district_code": current_district_code,
+                "type": None,
+                "source_page": page,
+            })
             continue
 
         if VILLAGE_CODE_RE.fullmatch(kode) and current_district_code:

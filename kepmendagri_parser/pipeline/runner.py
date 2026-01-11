@@ -156,8 +156,10 @@ def run_pipeline(
                         initial_district_code=village_context["district_code"],
                     )
                     if rows:
-                        village_rows.extend(rows)
-                        village_context["district_code"] = rows[-1]["district_code"]
+                        last = rows[-1]
+                        last_district_code = last.get("district_code")
+                        village_rows.extend(r for r in rows if r.get("name") is not None)
+                        village_context["district_code"] = last_district_code
 
                 state.last_page_type = page_type
 
