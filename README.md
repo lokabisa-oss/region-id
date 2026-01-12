@@ -48,9 +48,9 @@ version of the dataset is available:
 
 👉 https://docs.google.com/spreadsheets/d/1fWEIztD397_9uG4ZvAuv9IX43ek9gNvlRuykpwza9_I
 
-**Note:**  
-This spreadsheet is a read-only preview.  
-The authoritative and versioned datasets are published via GitHub Releases.
+**Note:**
+This spreadsheet reflects the latest released version (v1.0.1).
+The authoritative datasets remain the GitHub Release artifacts.
 
 ---
 
