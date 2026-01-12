@@ -17,3 +17,10 @@ out/
 
 # OS
 .DS_Store
+
+
+# audit artifacts
+audits/*.csv
+*_old.csv
+*_diff.csv
+*_summary.csv

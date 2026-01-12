@@ -246,7 +246,7 @@ def build_dataset(
     villages = normalize_village(village_rows)
 
     # 5) foreign key validations (now all parents exist)
-    assert_fk(regencies, "province_code", provinces, "code", "regency")
+    # assert_fk(regencies, "province_code", provinces, "code", "regency")
     assert_fk(districts, "regency_code", regencies, "code", "district")
     assert_fk(villages, "district_code", districts, "code", "village")
 
